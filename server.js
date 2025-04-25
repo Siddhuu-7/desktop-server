@@ -5,7 +5,7 @@ const path = require('path');
 const server = http.createServer((req, res) => {
   
   if (req.url === '/download') {
-    const filePath = path.join(__dirname, 'desktop_share.exe');
+    const filePath = path.join(__dirname, 'desktop_share.zip');
     const fileName = 'downloaded_file.exe';
     
     fs.exists(filePath, (exists) => {
