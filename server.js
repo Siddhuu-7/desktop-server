@@ -3,6 +3,25 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
+  if(req.url==='/avl'){
+    const filePath = path.join(__dirname, 'avl.c');
+    const fileName="avl.c"
+    fs.exists(filePath, (exists) => {
+      if (exists) {
+        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+        res.setHeader('Content-Type', 'application/octet-stream');
+        
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
+      } else {
+        res.statusCode = 404;
+        res.end('File not found');
+      }
+    });
+  } else {
+    res.statusCode = 404;
+    res.end('Not Found');
+  }
   
   if (req.url === '/download') {
     const filePath = path.join(__dirname, 'desktop_share.zip');
