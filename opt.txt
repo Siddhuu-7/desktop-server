@@ -1,0 +1,83 @@
+#include <stdio.h> 
+int findOptimal(int pages[], int frames[], int no_of_pages, int no_of_frames, int current)  
+{ 
+int farthest = current; 
+int index = -1,i; 
+// Check each frame to see which one will be replaced 
+for (i = 0; i < no_of_frames; i++)  
+{ 
+int j; 
+for (j = current; j < no_of_pages; j++)  
+{ 
+// If the frame is found in the future reference string 
+if (frames[i] == pages[j])  
+{ 
+if (j > farthest)  
+{ 
+farthest = j; 
+} 
+index = i;  // Update index of frame to be replaced 
+break; // Break out of the inner loop if the frame is found 
+} 
+} 
+// If the frame is not found in the future reference string 
+if (j == no_of_pages)  
+{ 
+return i; // Return the current frame index to replace 
+} 
+} 
+// If all frames are found in the future, replace the one with the farthest next use 
+return (index == -1) ? 0 : index; 
+} 
+int main() 
+{ 
+int frames[10], pages[30]; 
+int no_of_frames, no_of_pages; 
+int page_faults = 0; 
+int i,j,k; 
+printf("Enter the number of frames: "); 
+scanf("%d", &no_of_frames); 
+printf("Enter the number of pages: "); 
+scanf("%d", &no_of_pages); 
+printf("Enter the reference string: "); 
+for (i = 0; i < no_of_pages; i++)  
+{ 
+scanf("%d", &pages[i]); 
+} 
+// Initialize frames to -1 to indicate they are empty 
+for (i = 0; i < no_of_frames; i++)  
+{ 
+frames[i] = -1; 
+} 
+printf("\nPage Replacement Process:\n"); 
+for (i = 0; i < no_of_pages; i++)  
+{ 
+int flag = 0; 
+// Check if the page is already in one of the frames 
+for ( j = 0; j < no_of_frames; j++)  
+{ 
+if (frames[j] == pages[i])  
+{ 
+flag = 1; // Page found, no page fault 
+break; 
+} 
+} 
+// If the page is not found, a page fault occurs 
+if (flag == 0)  
+{ 
+int replace_index = findOptimal(pages, frames, no_of_pages, no_of_frames, i); 
+frames[replace_index] = pages[i]; // Replace the page 
+page_faults++; // Increment page fault count 
+// Display the current state of frames 
+for ( k = 0; k < no_of_frames; k++) { 
+if (frames[k] != -1) 
+printf("%d\t", frames[k]); 
+else 
+printf("-\t"); 
+} 
+printf("\n"); 
+} 
+} 
+printf("\nTotal Page Faults = %d\n", page_faults); 
+return 0; 
+}

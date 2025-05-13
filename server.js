@@ -3,51 +3,25 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/avl') {
-    const filePath = path.join(__dirname, 'avl.c');
-    const fileName = 'avl.c';
+  if (req.url === '/lru') {
+    const filePath = path.join(__dirname, 'LRU.txt');
+    const code =fs.readFileSync(filePath)
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end(code.toString())
+    
 
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        res.statusCode = 404;
-        res.end('File not found');
-      } else {
-        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-        res.setHeader('Content-Type', 'application/octet-stream');
+    
+  } else if (req.url === '/opt') {
+    const filePath = path.join(__dirname, 'opt.txt');
+    const code=fs.readFileSync(filePath)
+    res.writeHead(200,{"content-type":"text/plain"})
+    res.end(code.toString())
 
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
-        fileStream.on('error', () => {
-          res.statusCode = 500;
-          res.end('Error reading file');
-        });
-      }
-    });
-
-  } else if (req.url === '/download') {
-    const filePath = path.join(__dirname, 'desktop_share.zip');
-    const fileName = 'downloaded_file.zip';
-
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        res.statusCode = 404;
-        res.end('File not found');
-      } else {
-        res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-        res.setHeader('Content-Type', 'application/octet-stream');
-
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
-        fileStream.on('error', () => {
-          res.statusCode = 500;
-          res.end('Error reading file');
-        });
-      }
-    });
-
-  } else {
-    res.statusCode = 404;
-    res.end('Not Found');
+  } else if(req.url==="/bank"){
+    const filePath=path.join(__dirname,"bank.txt")
+    const code =fs.readFileSync(filePath)
+    res.writeHead(200,{"content-type":"text/plain"})
+    res.end(code.toString())
   }
 });
 
